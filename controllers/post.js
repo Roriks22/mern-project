@@ -4,7 +4,7 @@ const ObjectID = require("mongoose").Types.ObjectId;
 
 module.exports.readPost = async (req, res) => {
   try {
-    const posts = await PostModel.find();
+    const posts = await PostModel.find().sort({ createdAt: -1 });
     res.status(200).json(posts);
   } catch (err) {
     console.error("Erreur lors de la récupération des données :", err);
@@ -118,4 +118,57 @@ module.exports.unlikePost = async (req, res) => {
     console.error("Erreur lors du unlike :", err);
     res.status(500).json({ message: "Erreur serveur", error: err.message });
   }
+};
+
+module.exports.commentPost = async (req, res) => {
+  if (!ObjectID.isValid(req.params.id))
+    return res.status(400).send("Utilisateur non trouvé : " + req.params.id);
+  try {
+    const postComment = await PostModel.findByIdAndUpdate(
+      req.params.id,
+      {
+        $push: {
+          comments: {
+            commenterId: req.body.commenterId,
+            commenterPseudo: req.body.commenterPseudo,
+            text: req.body.text,
+            timestamp: new Date().getTime(),
+          },
+        },
+      },
+      {
+        new: true,
+      }
+    );
+    res.status(200).json(postComment);
+  } catch (err) {
+    console.error("Erreur lors du commentaire :", err);
+    res.status(500).json({ message: "Erreur serveur", error: err.message });
+  }
+};
+module.exports.editCommentPost = async (req, res) => {
+  if (!ObjectID.isValid(req.params.id))
+    return res.status(400).send("Utilisateur non trouvé : " + req.params.id);
+  try {
+    const commentEdit = await PostModel.findById(req.params.id);
+    if (!commentEdit) return res.status(404).send("Commentaire non trouvé.");
+    const theComment = commentEdit.comments.find((comment) =>
+      comment._id.equals(req.body.commentId)
+    );
+
+    if (!theComment) return res.status(404).send("Commentaire non trouvé.");
+    theComment.text = req.body.text;
+
+    const updatePost = await commentEdit.save();
+    return res.status(200).send(updatePost);
+  } catch (err) {
+    console.error("Erreur lors de la modification");
+    return res.status(500).send(err.message);
+  }
+};
+module.exports.deleteCommentPost = async (req, res) => {
+  if (!ObjectID.isValid(req.params.id))
+    return res.status(400).send("Utilisateur non trouvé : " + req.params.id);
+  try {
+  } catch (err) {}
 };
