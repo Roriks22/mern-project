@@ -170,5 +170,20 @@ module.exports.deleteCommentPost = async (req, res) => {
   if (!ObjectID.isValid(req.params.id))
     return res.status(400).send("Utilisateur non trouvé : " + req.params.id);
   try {
-  } catch (err) {}
+    const commentDelete = await PostModel.findByIdAndUpdate(
+      req.params.id,
+      {
+        $pull: {
+          comments: {
+            _id: req.body.commentId,
+          },
+        },
+      },
+      { new: true }
+    );
+    res.status(200).json(commentDelete);
+  } catch (err) {
+    console.error("Erreur lors de la suppression du commentaire :", err);
+    res.status(500).json({ message: "Erreur serveur", error: err.message });
+  }
 };
