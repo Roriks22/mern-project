@@ -1,5 +1,5 @@
 const PostModel = require("../models/post");
-const Usermodel = require("../models/user");
+const UserModel = require("../models/user");
 const ObjectID = require("mongoose").Types.ObjectId;
 
 module.exports.readPost = async (req, res) => {
@@ -56,6 +56,66 @@ module.exports.deletePost = async (req, res) => {
     res.status(200).json(delPost);
   } catch (err) {
     console.error("Erreur lors de la suppression des données :", err);
+    res.status(500).json({ message: "Erreur serveur", error: err.message });
+  }
+};
+module.exports.likePost = async (req, res) => {
+  if (!ObjectID.isValid(req.params.id))
+    return res.status(400).send("Utilisateur non trouvé : " + req.params.id);
+  try {
+    const lovePost = await PostModel.findByIdAndUpdate(
+      req.params.id,
+      {
+        $addToSet: { likers: req.body.id },
+      },
+      { new: true }
+    );
+    res.status(200).json(lovePost);
+  } catch (err) {
+    console.error("Erreur lors du like :", err);
+    res.status(500).json({ message: "Erreur serveur", error: err.message });
+  }
+  try {
+    const loveUser = await UserModel.findByIdAndUpdate(
+      req.body.id,
+      {
+        $addToSet: { likes: req.params.id },
+      },
+      { new: true }
+    );
+    res.status(200).json(loveUser);
+  } catch (err) {
+    console.error("Erreur lors du like :", err);
+    res.status(500).json({ message: "Erreur serveur", error: err.message });
+  }
+};
+module.exports.unlikePost = async (req, res) => {
+  if (!ObjectID.isValid(req.params.id))
+    return res.status(400).send("Utilisateur non trouvé : " + req.params.id);
+  try {
+    const unlovePost = await PostModel.findByIdAndUpdate(
+      req.params.id,
+      {
+        $pull: { likers: req.body.id },
+      },
+      { new: true }
+    );
+    res.status(200).json(unlovePost);
+  } catch (err) {
+    console.error("Erreur lors du unlike :", err);
+    res.status(500).json({ message: "Erreur serveur", error: err.message });
+  }
+  try {
+    const unloveUser = await UserModel.findByIdAndUpdate(
+      req.body.id,
+      {
+        $pull: { likes: req.params.id },
+      },
+      { new: true }
+    );
+    res.status(200).json(unloveUser);
+  } catch (err) {
+    console.error("Erreur lors du unlike :", err);
     res.status(500).json({ message: "Erreur serveur", error: err.message });
   }
 };
