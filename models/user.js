@@ -34,17 +34,24 @@ const userSchema = new mongoose.Schema(
       type: String,
       max: 1024,
     },
-    followers: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
-    },
-    following: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
-    },
-    likes: {
-      type: [String],
-    },
+    followers: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User",
+      },
+    ],
+    following: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User",
+      },
+    ],
+    likes: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Post",
+      },
+    ],
   },
   {
     timestamps: true,
@@ -70,4 +77,9 @@ userSchema.statics.login = async function (email, password) {
   throw Error("Email incorrect");
 };
 
-module.exports = mongoose.model("User", userSchema);
+const UserModel = mongoose.model("User", userSchema);
+
+// Cela force la création des index, y compris unique: true
+UserModel.init();
+
+module.exports = UserModel;

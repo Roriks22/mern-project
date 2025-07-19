@@ -35,6 +35,6 @@ module.exports.requireAuth = (req, res, next) => {
       }
     });
   } else {
-    return res.status(401).json({ error: "Accès refusé. Token manquant." });
+    return res.status(401).json({ error: "Accès refusé. Token refusé." });
   }
 };
