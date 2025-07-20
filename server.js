@@ -12,7 +12,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
 // jwt
-app.get(checkUser);
+app.use(checkUser);
 app.get("/jwtid", requireAuth, (req, res) => {
   res.status(200).send(res.locals.user._id);
 });
