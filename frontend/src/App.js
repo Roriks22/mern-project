@@ -1,9 +1,10 @@
 import React from "react";
+import Routes from "./components/routes";
 
 const App = () => {
   return (
     <div>
-      <h1>Ca marche</h1>
+      <Routes />
     </div>
   );
 };
