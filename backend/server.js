@@ -8,6 +8,10 @@ const { checkUser, requireAuth } = require("./middleware/auth");
 const cors = require("cors");
 const app = express();
 
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+app.use(cookieParser());
+
 const corsOptions = {
   origin: process.env.CLIENT_URL,
   credentials: true,
@@ -18,10 +22,6 @@ const corsOptions = {
 };
 
 app.use(cors(corsOptions));
-
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
-app.use(cookieParser());
 
 // jwt
 app.use(checkUser);
