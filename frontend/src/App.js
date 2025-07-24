@@ -11,18 +11,21 @@ const App = () => {
 
   useEffect(() => {
     const fetchToken = async () => {
-      await axios({
-        method: "get",
-        url: `${process.env.REACT_APP_API_URL}jwtid`,
-        withCredentials: true,
-      })
-        .then((res) => {
-          setUid(res.data);
-        })
-        .catch((err) => console.log("No token"));
+      try {
+        const res = await axios({
+          method: "get",
+          url: `${process.env.REACT_APP_API_URL}jwtid`,
+          withCredentials: true,
+        });
+        setUid(res.data);
+      } catch (err) {
+        console.log("No token");
+      }
     };
     fetchToken();
+  }, []);
 
+  useEffect(() => {
     if (uid) dispatch(getUser(uid));
   }, [uid]);
 
