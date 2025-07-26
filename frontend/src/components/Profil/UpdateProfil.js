@@ -5,6 +5,7 @@ import UploadImg from "./UploadImg";
 
 const UpdateProfil = () => {
   const userData = useSelector((state) => state.userReducer);
+
   return (
     <div className="profil-container">
       <LeftNav />
@@ -12,7 +13,12 @@ const UpdateProfil = () => {
       <div className="update-container">
         <div className="left-part">
           <h3>Photo de profil</h3>
-          <img src={userData.picture} alt="user-pic" />
+          <img
+            src={`${process.env.REACT_APP_API_URL}${
+              userData.picture
+            }?${Date.now()}`}
+            alt="user-pic"
+          />
           <UploadImg />
         </div>
       </div>

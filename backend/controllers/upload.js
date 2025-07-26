@@ -22,15 +22,16 @@ module.exports.uploadProfil = async (req, res) => {
   const fileName = req.body.name + "." + ext;
 
   try {
-    await fs.promises.writeFile(
-      `${__dirname}/../client/public/uploads/profil/${fileName}`,
-      req.file.buffer
-    );
+    const uploadPath = `${__dirname}/../uploads/profil/`;
+    if (!fs.existsSync(uploadPath)) {
+      fs.mkdirSync(uploadPath, { recursive: true });
+    }
+    await fs.promises.writeFile(uploadPath + fileName, req.file.buffer);
 
     const photoModel = await UserModel.findByIdAndUpdate(
       req.body.userId,
       {
-        $set: { picture: "./uploads/profil/" + fileName },
+        $set: { picture: "uploads/profil/" + fileName },
       },
       { new: true, pusert: true, setDefaultsOnInsert: true }
     );
