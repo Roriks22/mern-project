@@ -44,11 +44,11 @@ const UpdateProfil = () => {
             )}
             {updateForm && (
               <>
-                <testarea
+                <textarea
                   type="text"
-                  dafautValue={userData.bio}
+                  dafautvalue={userData.bio}
                   onChange={(e) => setBio(e.target.value)}
-                ></testarea>
+                ></textarea>
                 <button onClick={handleUpdate}>Valider modifications</button>
               </>
             )}
