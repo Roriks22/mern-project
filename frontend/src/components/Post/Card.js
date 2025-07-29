@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { dateParser, isEmpty } from "../Utils";
+import FollowHandler from "../Profil/FollowHandler";
 
 const Card = ({ post }) => {
   const [isLoading, setIsLoading] = useState(true);
@@ -37,9 +38,34 @@ const Card = ({ post }) => {
             <div className="card-header">
               <div className="pseudo">
                 <h3>{poster ? poster.pseudo : ""}</h3>
+                {post.posterId !== userData._id && (
+                  <FollowHandler idToFollow={post._id} type={"card"} />
+                )}
               </div>
               <span>{dateParser(post.createdAt)}</span>
             </div>
+            <p>{post.message}</p>
+            {post.picture && (
+              <img
+                src={`${process.env.REACT_APP_API_URL}${poster.picture.replace(
+                  "./",
+                  ""
+                )}`}
+                alt="card-pic"
+                className="card-pic"
+              />
+            )}
+            {post.video && (
+              <iframe
+                width="500"
+                height="300"
+                src={post.video}
+                frameborder="0"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
+                title={post._id}
+              ></iframe>
+            )}
           </div>
         </>
       )}
