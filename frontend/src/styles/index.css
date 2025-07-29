@@ -348,6 +348,7 @@ nav .nav-container ul li img {
       -ms-flex-pack: justify;
           justify-content: space-between;
   margin: 2px 0 4px;
+  min-height: 35px;
 }
 @media screen and (max-width: 590px) {
   .card-container .card-right .card-header {

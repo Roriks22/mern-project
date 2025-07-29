@@ -6,7 +6,7 @@ import FollowHandler from "../Profil/FollowHandler";
 const Card = ({ post }) => {
   const [isLoading, setIsLoading] = useState(true);
   const usersData = useSelector((state) => state.usersReducer);
-  const userData = useSelector((state) => state.usersReducer);
+  const userData = useSelector((state) => state.userReducer);
 
   useEffect(() => {
     if (!isEmpty(usersData)) {
@@ -39,7 +39,7 @@ const Card = ({ post }) => {
               <div className="pseudo">
                 <h3>{poster ? poster.pseudo : ""}</h3>
                 {post.posterId !== userData._id && (
-                  <FollowHandler idToFollow={post._id} type={"card"} />
+                  <FollowHandler idToFollow={post.posterId} type={"card"} />
                 )}
               </div>
               <span>{dateParser(post.createdAt)}</span>
@@ -66,6 +66,14 @@ const Card = ({ post }) => {
                 title={post._id}
               ></iframe>
             )}
+            <div className="card-footer">
+              <div className="comment-icon">
+                <img src="./img/icons/message1.svg" alt="comment" />
+                <span>{post.comments.length}</span>
+              </div>
+              <h6>Like button</h6>
+              <img src="./img/icons/share.svg" alt="share" />
+            </div>
           </div>
         </>
       )}

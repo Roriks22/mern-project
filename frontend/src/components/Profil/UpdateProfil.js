@@ -128,7 +128,10 @@ const UpdateProfil = () => {
                         />
                         <h4>{user.pseudo}</h4>
                         <div className="follow-handler">
-                          <FollowHandler idToFollow={user._id} />
+                          <FollowHandler
+                            idToFollow={user._id}
+                            type={"suggestion"}
+                          />
                         </div>
                       </li>
                     );
