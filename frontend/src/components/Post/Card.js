@@ -33,6 +33,13 @@ const Card = ({ post }) => {
               alt="poster-pic"
             />
           </div>
+          <div className="card-right">
+            <div className="card-header">
+              <div className="pseudo">
+                <h3>{poster ? poster.pseudo : ""}</h3>
+              </div>
+            </div>
+          </div>
         </>
       )}
     </li>
