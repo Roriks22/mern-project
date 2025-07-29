@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import { isEmpty } from "../Utils";
+import { dateParser, isEmpty } from "../Utils";
 
 const Card = ({ post }) => {
   const [isLoading, setIsLoading] = useState(true);
@@ -38,6 +38,7 @@ const Card = ({ post }) => {
               <div className="pseudo">
                 <h3>{poster ? poster.pseudo : ""}</h3>
               </div>
+              <span>{dateParser(post.createdAt)}</span>
             </div>
           </div>
         </>
