@@ -581,8 +581,15 @@ nav .nav-container ul li img {
   font-family: "font-1", sans-serif;
 }
 .card-container .card-right .comment-container .comment-header .pseudo span {
-  -webkit-transform: translateX(6px);
-          transform: translateX(6px);
+  -webkit-transform: translate(6px, 4px);
+          transform: translate(6px, 4px);
+  cursor: pointer;
+}
+.card-container .card-right .comment-container .comment-header .pseudo span img {
+  -webkit-box-shadow: none;
+          box-shadow: none;
+  height: 15px;
+  width: 15px;
 }
 .card-container .card-right .comment-container .comment-header span {
   font-size: 0.9rem;

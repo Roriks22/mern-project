@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { isEmpty } from "../Utils";
+import FollowHandler from "../Profil/FollowHandler";
 
 const CardComment = ({ post }) => {
   const [text, setText] = useState("");
@@ -9,9 +9,13 @@ const CardComment = ({ post }) => {
   const dispatch = useDispatch();
 
   const handleComment = () => {};
+
   return (
     <div className="comments-container">
       {post.comments.map((comment) => {
+        const commenter = usersData.find(
+          (user) => user._id === comment.commenterId
+        );
         return (
           <div
             className={
@@ -24,19 +28,27 @@ const CardComment = ({ post }) => {
             <div className="left-part">
               <img
                 src={
-                  !isEmpty(usersData[0]) &&
-                  usersData
-                    .map((user) => {
-                      if (user._id === comment.commenterId)
-                        return `${
-                          process.env.REACT_APP_API_URL
-                        }${user.picture.replace("./", "")}`;
-                      else return null;
-                    })
-                    .join("")
+                  commenter
+                    ? `${
+                        process.env.REACT_APP_API_URL
+                      }${commenter.picture.replace("./", "")}`
+                    : "/uploads/profil/random-user.png"
                 }
                 alt="commenter-pic"
               />
+            </div>
+            <div className="right-part">
+              <div className="comment-header">
+                <div className="pseudo">
+                  <h3>{commenter ? commenter.pseudo : "Utilisateur"}</h3>
+                  {userData._id !== comment.commenterId && (
+                    <FollowHandler
+                      idToFollow={comment.commenterId}
+                      type={"card"}
+                    />
+                  )}
+                </div>
+              </div>
             </div>
           </div>
         );
