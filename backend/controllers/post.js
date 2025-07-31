@@ -81,7 +81,7 @@ module.exports.deletePost = async (req, res) => {
     return res.status(400).send("Utilisateur non trouvé : " + req.params.id);
 
   try {
-    const delPost = await PostModel.findOneAndDelete(req.params.id);
+    const delPost = await PostModel.findByIdAndDelete(req.params.id);
     res.status(200).json(delPost);
   } catch (err) {
     console.error("Erreur lors de la suppression des données :", err);

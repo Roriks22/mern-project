@@ -1,11 +1,12 @@
 import {
+  DELETE_POST,
   GET_POSTS,
   LIKE_POST,
   UNLIKE_POST,
   UPDATE_POST,
 } from "../actions/post.actions";
 
-const initialState = {};
+const initialState = [];
 
 export default function postReducer(state = initialState, action) {
   switch (action.type) {
@@ -37,6 +38,8 @@ export default function postReducer(state = initialState, action) {
           ? { ...post, message: action.payload.message }
           : post
       );
+    case DELETE_POST:
+      return state.filter((post) => post._id !== action.payload);
     default:
       return state;
   }
