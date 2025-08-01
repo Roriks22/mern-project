@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import { isEmpty } from "../Utils";
+import { isEmpty, timestampParser } from "../Utils";
 import { NavLink } from "react-router-dom";
 
 const NewPostForm = () => {
@@ -13,9 +13,35 @@ const NewPostForm = () => {
 
   const handlePicture = () => {};
 
+  const handlePost = () => {};
+
+  const cancelPost = () => {
+    setMessage("");
+    setPostPicture("");
+    setVideo("");
+    setFile("");
+  };
+
   useEffect(() => {
     if (!isEmpty(userData)) setIsLoading(false);
-  }, [userData]);
+
+    const handleVideo = () => {
+      let findLink = message.split(" ");
+      for (let i = 0; i < findLink.length; i++) {
+        if (
+          findLink[i].includes("https://www.yout") ||
+          findLink[i].includes("https://yout")
+        ) {
+          let embed = findLink[i].replace("watch?v=", "embed/");
+          setVideo(embed.split("&")[0]);
+          findLink.splice(i, 1);
+          setMessage(findLink.join(" "));
+          setPostPicture("");
+        }
+      }
+    };
+    handleVideo();
+  }, [userData, message, video]);
 
   return (
     <div className="post-container">
@@ -53,6 +79,39 @@ const NewPostForm = () => {
               onChange={(e) => setMessage(e.target.value)}
               value={message}
             />
+            {message || postPicture || video.length > 20 ? (
+              <li className="card-container">
+                <div className="card-left">
+                  <img
+                    src={`${
+                      process.env.REACT_APP_API_URL
+                    }${userData.picture.replace("./", "")}`}
+                    alt="user-pic"
+                  />
+                </div>
+                <div className="card-right">
+                  <div className="card-header">
+                    <div className="pseudo">
+                      <h3>{userData.pseudo}</h3>
+                    </div>
+                    <span>{timestampParser(Date.now())}</span>
+                  </div>
+                  <div className="content">
+                    <p>{message}</p>
+                    <img src={postPicture} alt="" />
+                    {video && (
+                      <iframe
+                        src={video}
+                        frameborder="0"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                        allowFullScreen
+                        title={video}
+                      ></iframe>
+                    )}
+                  </div>
+                </div>
+              </li>
+            ) : null}
             <div className="footer-form">
               <div className="icon">
                 {isEmpty(video) && (
@@ -66,6 +125,20 @@ const NewPostForm = () => {
                       onChange={(e) => handlePicture(e)}
                     />
                   </>
+                )}
+                {video && (
+                  <button onClick={() => setVideo("")}>Supprimer video</button>
+                )}
+              </div>
+              <div className="btn-send">
+                {message || postPicture || video.length > 20 ? (
+                  <button className="cancel" onClick={cancelPost}>
+                    Annuler message
+                  </button>
+                ) : (
+                  <button className="send" onClick={handlePost}>
+                    Envoyer
+                  </button>
                 )}
               </div>
             </div>
