@@ -11,9 +11,13 @@ const NewPostForm = () => {
   const [file, setFile] = useState();
   const userData = useSelector((state) => state.userReducer);
 
-  const handlePicture = () => {};
-
   const handlePost = () => {};
+
+  const handlePicture = (e) => {
+    setPostPicture(URL.createObjectURL(e.target.files[0]));
+    setFile(e.target.files[0]);
+    setVideo("");
+  };
 
   const cancelPost = () => {
     setMessage("");
