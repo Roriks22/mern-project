@@ -33,12 +33,15 @@ export const addPost = (data) => {
     return axios
       .post(`${process.env.REACT_APP_API_URL}api/post/`, data)
       .then((res) => {
-        if (res.data.errors) {
-          dispatch({ type: GET_POSTS_ERRORS, payload: res.data.errors });
-        }
+        dispatch({ type: GET_POSTS_ERRORS, payload: {} });
       })
       .catch((err) => {
-        console.error("Erreur lors de l'ajout du post :", err);
+        if (err.response && err.response.data.errors) {
+          dispatch({
+            type: GET_POSTS_ERRORS,
+            payload: err.response.data.errors,
+          });
+        }
       });
   };
 };
