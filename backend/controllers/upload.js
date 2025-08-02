@@ -33,7 +33,7 @@ module.exports.uploadProfil = async (req, res) => {
       {
         $set: { picture: "uploads/profil/" + fileName },
       },
-      { new: true, pusert: true, setDefaultsOnInsert: true }
+      { new: true, upsert: true, setDefaultsOnInsert: true }
     );
     res.status(200).json(photoModel);
   } catch (err) {

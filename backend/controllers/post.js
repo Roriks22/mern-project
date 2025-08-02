@@ -16,7 +16,7 @@ module.exports.readPost = async (req, res) => {
 module.exports.createPost = async (req, res) => {
   let fileName;
 
-  if (req.file !== null) {
+  if (req.file) {
     try {
       if (
         req.file.mimetype !== "image/jpg" &&
@@ -31,28 +31,34 @@ module.exports.createPost = async (req, res) => {
       const errors = uploadErrors(err);
       return res.status(400).json({ errors });
     }
-    fileName =
-      req.body.posterId + Date.now() + "." + req.file.mimetype.split("/")[1];
+    fileName = req.body.posterId + Date.now() + ".jpg";
 
-    await fs.promises.writeFile(
-      `${__dirname}/../client/public/uploads/posts/${fileName}`,
-      req.file.buffer
-    );
-
-    const newPost = new PostModel({
-      posterId: req.body.posterId,
-      message: req.body.message,
-      picture: req.file !== null ? "./uploads/posts/" + fileName : "",
-      video: req.body.video,
-      likers: [],
-      comments: [],
-    });
     try {
-      const post = await newPost.save();
-      return res.status(201).json(post);
+      const uploadPath = `${__dirname}/../uploads/posts/`;
+      if (!fs.existsSync(uploadPath)) {
+        fs.mkdirSync(uploadPath, { recursive: true });
+      }
+      await fs.promises.writeFile(uploadPath + fileName, req.file.buffer);
     } catch (err) {
-      return res.status(400).send(err);
+      return res
+        .status(500)
+        .json({ message: "Erreur lors du traitement du fichier." });
     }
+  }
+
+  const newPost = new PostModel({
+    posterId: req.body.posterId,
+    message: req.body.message,
+    picture: fileName ? `uploads/posts/${fileName}` : "",
+    video: req.body.video || "",
+    likers: [],
+    comments: [],
+  });
+  try {
+    const post = await newPost.save();
+    return res.status(201).json(post);
+  } catch (err) {
+    return res.status(400).send(err);
   }
 };
 module.exports.updatePost = async (req, res) => {

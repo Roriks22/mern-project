@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { isEmpty, timestampParser } from "../Utils";
 import { NavLink } from "react-router-dom";
+import { addPost, getPosts } from "../../actions/post.actions";
 
 const NewPostForm = () => {
   const [isLoading, setIsLoading] = useState(true);
@@ -10,8 +11,23 @@ const NewPostForm = () => {
   const [video, setVideo] = useState("");
   const [file, setFile] = useState();
   const userData = useSelector((state) => state.userReducer);
+  const dispatch = useDispatch();
 
-  const handlePost = () => {};
+  const handlePost = async () => {
+    if (message || postPicture || video) {
+      const data = new FormData();
+      data.append("posterId", userData._id);
+      data.append("message", message);
+      if (file) data.append("file", file);
+      data.append("video", video);
+
+      await dispatch(addPost(data));
+      await dispatch(getPosts());
+      cancelPost();
+    } else {
+      alert("Veuillez entrer un message");
+    }
+  };
 
   const handlePicture = (e) => {
     setPostPicture(URL.createObjectURL(e.target.files[0]));
@@ -102,7 +118,7 @@ const NewPostForm = () => {
                   </div>
                   <div className="content">
                     <p>{message}</p>
-                    <img src={postPicture} alt="" />
+                    {postPicture && <img src={postPicture} alt="" />}
                     {video && (
                       <iframe
                         src={video}
@@ -139,11 +155,10 @@ const NewPostForm = () => {
                   <button className="cancel" onClick={cancelPost}>
                     Annuler message
                   </button>
-                ) : (
-                  <button className="send" onClick={handlePost}>
-                    Envoyer
-                  </button>
-                )}
+                ) : null}
+                <button className="send" onClick={handlePost}>
+                  Envoyer
+                </button>
               </div>
             </div>
           </div>

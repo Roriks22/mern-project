@@ -78,10 +78,7 @@ const Card = ({ post }) => {
             )}
             {post.picture && (
               <img
-                src={`${process.env.REACT_APP_API_URL}${poster.picture.replace(
-                  "./",
-                  ""
-                )}`}
+                src={`${process.env.REACT_APP_API_URL}${post.picture}`}
                 alt="card-pic"
                 className="card-pic"
               />
