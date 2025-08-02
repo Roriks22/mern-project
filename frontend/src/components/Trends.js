@@ -51,6 +51,10 @@ const Trends = () => {
                       ></iframe>
                     )}
                   </div>
+                  <div className="trend-content">
+                    <p>{post.message}</p>
+                    <span>Lire</span>
+                  </div>
                 </li>
               );
             })}
