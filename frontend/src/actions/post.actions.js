@@ -33,7 +33,7 @@ export const addPost = (data) => {
     return axios
       .post(`${process.env.REACT_APP_API_URL}api/post/`, data)
       .then((res) => {
-        dispatch({ type: GET_POSTS_ERRORS, payload: {} });
+        dispatch({ type: GET_POSTS_ERRORS, payload: "" });
       })
       .catch((err) => {
         if (err.response && err.response.data.errors) {
